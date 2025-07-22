@@ -1,0 +1,38 @@
+<!-- templates/inventario/escanear_producto.html -->
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Escanear código</title>
+    <script src="https://unpkg.com/html5-qrcode" type="text/javascript"></script>
+    <style>
+        #reader { width: 100%; max-width: 400px; margin: auto; }
+        form { margin-top: 20px; }
+    </style>
+</head>
+<body>
+    <h2>Escanear producto con cámara</h2>
+    <div id="reader"></div>
+
+    <form method="post" action="{% url 'cargar_producto' %}">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Guardar producto</button>
+    </form>
+
+    <script>
+        function onScanSuccess(decodedText, decodedResult) {
+            document.querySelector('#id_codigo_barras').value = decodedText;
+        }
+
+        const html5QrCode = new Html5Qrcode("reader");
+        html5QrCode.start(
+            { facingMode: "environment" },
+            { fps: 10, qrbox: 250 },
+            onScanSuccess
+        ).catch(err => {
+            console.error("Error al iniciar escáner:", err);
+        });
+    </script>
+</body>
+</html>

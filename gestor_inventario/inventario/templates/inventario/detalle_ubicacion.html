@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Ubicación: {{ ubicacion.nombre }}</title>
+</head>
+<body>
+    <h2>Ubicación: {{ ubicacion.nombre }}</h2>
+
+    {% if pallets %}
+        <ul>
+        {% for pallet in pallets %}
+            <li>{{ pallet.numero_pallet }}</li>
+        {% endfor %}
+        </ul>
+    {% else %}
+        <p>No hay pallets en esta ubicación.</p>
+    {% endif %}
+
+    <a href="{% url 'crear_pallet' %}">Agregar nuevo pallet</a>
+</body>
+</html>

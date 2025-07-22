@@ -1,0 +1,216 @@
+{% extends 'inventario/base.html' %}
+
+{% block page_title %}Dashboard{% endblock %}
+
+{% block content %}
+<div class="row mb-4">
+    <!-- Stats Cards -->
+    <div class="col-md-3">
+        <div class="card card-stats card-success">
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-8">
+                        <div class="numbers">
+                            <p class="card-category">Total Productos</p>
+                            <h3 class="card-title">{{ productos|length }}</h3>
+                        </div>
+                    </div>
+                    <div class="col-4">
+                        <div class="icon-big text-center">
+                            <i class="fas fa-box text-success fa-2x"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-3">
+        <div class="card card-stats card-info">
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-8">
+                        <div class="numbers">
+                            <p class="card-category">Total Pallets</p>
+                            <h3 class="card-title">{{ entradas|length }}</h3>
+                        </div>
+                    </div>
+                    <div class="col-4">
+                        <div class="icon-big text-center">
+                            <i class="fas fa-boxes text-info fa-2x"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-3">
+        <div class="card card-stats card-warning">
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-8">
+                        <div class="numbers">
+                            <p class="card-category">Ubicaciones</p>
+                            <h3 class="card-title">{{ ubicaciones|length }}</h3>
+                        </div>
+                    </div>
+                    <div class="col-4">
+                        <div class="icon-big text-center">
+                            <i class="fas fa-map-marker-alt text-warning fa-2x"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-3">
+        <div class="card card-stats card-danger">
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-8">
+                        <div class="numbers">
+                            <p class="card-category">Stock Total</p>
+                            <h3 class="card-title">
+                                {% for producto in productos %}
+                                    {% if forloop.first %}{{ producto.cantidad }}{% else %}{% endif %}
+                                {% empty %}0{% endfor %}
+                            </h3>
+                        </div>
+                    </div>
+                    <div class="col-4">
+                        <div class="icon-big text-center">
+                            <i class="fas fa-calculator text-danger fa-2x"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <!-- Quick Actions -->
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-header">
+                <h5><i class="fas fa-bolt text-warning"></i> Acciones Rápidas</h5>
+            </div>
+            <div class="card-body">
+                <div class="d-grid gap-2">
+                    <a href="{% url 'escanear_producto' %}" class="btn btn-success btn-lg">
+                        <i class="fas fa-qrcode me-2"></i>Escáner de Códigos
+                    </a>
+                    <a href="{% url 'cargar_producto' %}" class="btn btn-primary">
+                        <i class="fas fa-plus-circle me-2"></i>Cargar Producto
+                    </a>
+                    <a href="{% url 'crear_pallet' %}" class="btn btn-info">
+                        <i class="fas fa-boxes me-2"></i>Nuevo Pallet
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Recent Pallets -->
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-header">
+                <h5><i class="fas fa-history text-info"></i> Pallets Recientes</h5>
+            </div>
+            <div class="card-body">
+                {% if entradas %}
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Pallet</th>
+                                    <th>Ubicación</th>
+                                    <th>Productos</th>
+                                    <th>Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for pallet in entradas %}
+                                <tr>
+                                    <td>{{ pallet.numero_pallet }}</td>
+                                    <td>{{ pallet.ubicacion.nombre }}</td>
+                                    <td>
+                                        <span class="badge bg-secondary">
+                                            {{ pallet.productos.count }} items
+                                        </span>
+                                    </td>
+                                    <td>
+                                        <a href="{% url 'imprimir_etiqueta' pallet.id %}" class="btn btn-sm btn-outline-primary">
+                                            <i class="fas fa-print"></i>
+                                        </a>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                {% else %}
+                    <div class="text-center text-muted py-4">
+                        <i class="fas fa-boxes fa-3x mb-3"></i>
+                        <p>No hay pallets registrados aún</p>
+                        <a href="{% url 'crear_pallet' %}" class="btn btn-primary">
+                            <i class="fas fa-plus"></i> Crear primer pallet
+                        </a>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Recent Products -->
+{% if productos %}
+<div class="row mt-4">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header">
+                <h5><i class="fas fa-box-open text-success"></i> Productos Recientes</h5>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>Código</th>
+                                <th>Producto</th>
+                                <th>Cantidad</th>
+                                <th>Pallet</th>
+                                <th>Ubicación</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for producto in productos|slice:":10" %}
+                            <tr>
+                                <td><code>{{ producto.codigo_barras }}</code></td>
+                                <td>{{ producto.nombre }}</td>
+                                <td>
+                                    <span class="badge bg-info">{{ producto.cantidad }}</span>
+                                </td>
+                                <td>{{ producto.pallet.numero_pallet }}</td>
+                                <td>{{ producto.pallet.ubicacion.nombre }}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                {% if productos|length > 10 %}
+                    <div class="text-center">
+                        <a href="{% url 'lista_pallets' %}" class="btn btn-outline-primary">
+                            Ver todos los productos
+                        </a>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endif %}
+
+{% endblock %}

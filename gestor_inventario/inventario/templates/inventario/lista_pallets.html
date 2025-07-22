@@ -1,0 +1,71 @@
+<!-- inventario/templates/inventario/lista_pallets.html -->
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Lista de Pallets</title>
+    <style>
+        body { font-family: Arial; padding: 20px; }
+        select, button {
+            padding: 6px 10px;
+            margin-bottom: 20px;
+        }
+        table { width: 100%; border-collapse: collapse; }
+        th, td { border: 1px solid #ddd; padding: 10px; }
+        a.btn {
+            padding: 6px 12px;
+            background-color: #007bff;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+        }
+        a.btn:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <h2>Lista de Pallets</h2>
+
+    <form method="get">
+        <label for="ubicacion">Filtrar por ubicación:</label>
+        <select name="ubicacion" id="ubicacion" onchange="this.form.submit()">
+            <option value="">-- Todas --</option>
+            {% for ubicacion in ubicaciones %}
+                <option value="{{ ubicacion.id }}" {% if ubicacion.id == ubicacion_seleccionada %}selected{% endif %}>
+                    {{ ubicacion.nombre }}
+                </option>
+            {% endfor %}
+        </select>
+    </form>
+
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Número de Pallet</th>
+                <th>Ubicación</th>
+                <th>Acción</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for pallet in pallets %}
+            <tr>
+                <td>{{ pallet.id }}</td>
+                <td>{{ pallet.numero_pallet }}</td>
+                <td>{{ pallet.ubicacion.nombre }}</td>
+                <td>
+                    <a class="btn" href="{% url 'imprimir_etiqueta' pallet.id %}" target="_blank">
+                        Imprimir Etiqueta
+                    </a>
+                </td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="4">No hay pallets en esta ubicación.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</body>
+</html>

@@ -1,0 +1,39 @@
+<!-- templates/inventario/etiqueta.html -->
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Etiqueta Pallet</title>
+    <style>
+        body { font-family: Arial; padding: 20px; }
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+        th, td { border: 1px solid #000; padding: 5px; text-align: left; }
+        .print-button { margin-top: 20px; }
+    </style>
+</head>
+<body>
+    <h2>Etiqueta - Pallet {{ pallet.numero_pallet }}</h2>
+    <p><strong>Ubicación:</strong> {{ pallet.ubicacion }}</p>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Producto</th>
+                <th>Código de barras</th>
+                <th>Cantidad</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for producto in productos %}
+            <tr>
+                <td>{{ producto.nombre }}</td>
+                <td>{{ producto.codigo_barras }}</td>
+                <td>{{ producto.cantidad }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <button class="print-button" onclick="window.print()">Imprimir etiqueta</button>
+</body>
+</html>

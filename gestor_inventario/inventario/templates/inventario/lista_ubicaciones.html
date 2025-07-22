@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Lista de ubicaciones</title>
+</head>
+<body>
+    <h2>Ubicaciones disponibles</h2>
+
+    {% if ubicaciones %}
+        <ul>
+        {% for ubicacion in ubicaciones %}
+            <li>
+                <a href="{% url 'detalle_ubicacion' ubicacion.id %}">
+                    {{ ubicacion.nombre }}
+                </a>
+            </li>
+        {% endfor %}
+        </ul>
+    {% else %}
+        <p>No hay ubicaciones registradas.</p>
+    {% endif %}
+
+    <a href="{% url 'crear_ubicacion' %}">Agregar nueva ubicación</a>
+</body>
+</html>
